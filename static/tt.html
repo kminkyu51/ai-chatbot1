@@ -27,24 +27,32 @@
         </button>
 
         <div class="sidebar-section">
-            <p class="section-title">학과 선택</p>
-            <label for="departmentSelect" class="sr-only">학과 선택</label>
+            <p class="section-title">학사 안내 분야 선택</p>
+
+            <label for="departmentSelect" class="sr-only">
+                학사 안내 분야 선택
+            </label>
+
             <select id="departmentSelect" class="department-select">
-                <option value="">학과를 선택하세요</option>
+                <option value="">안내 분야를 선택하세요</option>
                 <option value="data1">성서학과</option>
                 <option value="data2">사회복지학과</option>
                 <option value="data3">영유아보육학과</option>
                 <option value="data4">간호학과</option>
                 <option value="data5">AI융합학부</option>
+                <option value="data6">교양 과목 안내</option>
+                <option value="data7">일반 학사 안내</option>
             </select>
+
             <p class="sidebar-help">
-                선택한 학과의 학사정보를 바탕으로 답변합니다.
+                선택한 분야의 학사정보를 바탕으로 답변합니다.
             </p>
         </div>
 
         <!-- 데이터베이스에 저장된 대화 목록 -->
         <div class="history-section">
             <p class="section-title">최근 대화</p>
+
             <div id="conversationList" class="conversation-list">
                 <p class="history-empty">저장된 대화를 불러오는 중...</p>
             </div>
@@ -62,7 +70,9 @@
         <header class="topbar">
             <button class="icon-button menu-button" id="menuButton"
                     aria-label="메뉴 열기">☰</button>
+
             <div class="mobile-brand">한국성서대 학사 안내 AI</div>
+
             <div class="topbar-right">
                 <span class="topbar-label">학사정보 AI 도우미</span>
             </div>
@@ -70,12 +80,15 @@
 
         <section class="chat-area" id="chatArea"
                  aria-label="채팅 대화">
+
             <div class="welcome-screen" id="welcomeScreen">
                 <div class="welcome-icon">✳</div>
+
                 <h1>무엇을 도와드릴까요?</h1>
+
                 <p class="welcome-description">
                     한국성서대학교 학사안내 AI입니다.<br>
-                    학과를 선택하고 궁금한 학사정보를 질문해 보세요.
+                    안내 분야를 선택하고 궁금한 학사정보를 질문해 보세요.
                 </p>
 
                 <div class="suggestion-list">
@@ -85,18 +98,21 @@
                         <span>수강신청 방법 알려줘</span>
                         <span class="suggestion-arrow">↗</span>
                     </button>
+
                     <button class="suggestion-card"
                             data-question="졸업요건을 알려주세요.">
                         <span class="suggestion-icon">◇</span>
                         <span>졸업요건 알려줘</span>
                         <span class="suggestion-arrow">↗</span>
                     </button>
+
                     <button class="suggestion-card"
                             data-question="수강철회 기간과 방법을 알려주세요.">
                         <span class="suggestion-icon">◷</span>
                         <span>수강철회 기간 알려줘</span>
                         <span class="suggestion-arrow">↗</span>
                     </button>
+
                     <button class="suggestion-card"
                             data-question="학과 사무실 문의처를 알려주세요.">
                         <span class="suggestion-icon">⌕</span>
@@ -112,16 +128,23 @@
         <footer class="composer-area">
             <form class="composer" id="chatForm">
                 <label for="questionInput" class="sr-only">질문 입력</label>
+
                 <textarea id="questionInput"
                           placeholder="학사정보에 대해 무엇이든 질문하세요."
-                          rows="1" maxlength="2000" required></textarea>
+                          rows="1"
+                          maxlength="2000"
+                          required></textarea>
 
                 <div class="composer-bottom">
                     <span class="composer-hint" id="composerHint">
-                        먼저 학과를 선택해 주세요.
+                        먼저 안내 분야를 선택해 주세요.
                     </span>
-                    <button type="submit" class="send-button" id="sendButton"
-                            aria-label="질문 보내기" disabled>↑</button>
+
+                    <button type="submit"
+                            class="send-button"
+                            id="sendButton"
+                            aria-label="질문 보내기"
+                            disabled>↑</button>
                 </div>
             </form>
 

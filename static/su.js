@@ -19,17 +19,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeSidebar = document.getElementById("closeSidebar");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
 
+    // 학사 안내 분야의 ID와 표시 이름을 연결한다.
     const departmentNames = {
         data1: "성서학과",
         data2: "사회복지학과",
         data3: "영유아보육학과",
         data4: "간호학과",
-        data5: "AI융합학부"
+        data5: "AI융합학부",
+        data6: "교양 과목 안내",
+        data7: "일반 학사 안내"
     };
 
     let currentConversationId = null;
     let isLoading = false;
 
+    // Flask 서버에 요청하고 JSON 응답을 받는다.
     async function apiRequest(url, options = {}) {
         const response = await fetch(url, options);
 
@@ -44,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return result;
     }
 
+    // 선택 여부, 질문 입력 여부에 따라 전송 버튼과 안내 문구를 변경한다.
     function updateInputState() {
         const department = departmentSelect.value;
         const hasQuestion = questionInput.value.trim() !== "";
@@ -54,7 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (isLoading) {
             composerHint.textContent = "답변을 생성하고 있습니다...";
         } else if (!department) {
-            composerHint.textContent = "먼저 학과를 선택해 주세요.";
+            composerHint.textContent =
+                "먼저 안내 분야를 선택해 주세요.";
         } else {
             composerHint.textContent =
                 `${departmentNames[department]} 선택됨`;
@@ -65,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         chatArea.scrollTop = chatArea.scrollHeight;
     }
 
+    // 질문이나 답변을 채팅 화면에 표시한다.
     function createMessage(role, text) {
         const message = document.createElement("div");
         message.className = `message ${role}`;
@@ -99,6 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return message;
     }
 
+    // AI 답변을 기다리는 동안 로딩 표시를 보여 준다.
     function showLoading() {
         const message = document.createElement("div");
         message.className = "message assistant";
@@ -170,8 +178,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const openButton = document.createElement("button");
                 openButton.type = "button";
                 openButton.className = "conversation-open";
-                openButton.textContent = conversation.title || "새 채팅";
-                openButton.title = conversation.title || "새 채팅";
+                openButton.textContent =
+                    conversation.title || "새 채팅";
+                openButton.title =
+                    conversation.title || "새 채팅";
 
                 openButton.addEventListener("click", () => {
                     openConversation(conversation.id);
@@ -198,7 +208,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const errorMessage = document.createElement("p");
             errorMessage.className = "history-empty";
-            errorMessage.textContent = "대화 목록을 불러오지 못했습니다.";
+            errorMessage.textContent =
+                "대화 목록을 불러오지 못했습니다.";
 
             conversationList.appendChild(errorMessage);
         }
@@ -271,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 대화와 그 안의 메시지를 DB에서 삭제한다.
+    // 대화와 그 안에 저장된 메시지를 DB에서 삭제한다.
     async function deleteConversation(conversationId) {
         if (isLoading) return;
 
@@ -291,6 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 messages.replaceChildren();
                 welcomeScreen.hidden = false;
                 questionInput.value = "";
+                questionInput.style.height = "auto";
             }
 
             await loadConversationList();
@@ -300,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 질문을 보내고 Gemini의 답변을 저장한다.
+    // 질문을 서버에 보내고 Gemini 답변을 화면에 표시한다.
     async function sendQuestion(questionText) {
         const question = questionText.trim();
         const department = departmentSelect.value;
@@ -309,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!department) {
             composerHint.textContent =
-                "질문하기 전에 학과를 선택해 주세요.";
+                "질문하기 전에 안내 분야를 선택해 주세요.";
             departmentSelect.focus();
             return;
         }
@@ -366,15 +378,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             errorMessage.classList.add("message-error");
 
-            // 요청이 실패했더라도 대화 목록을 다시 확인한다.
+            // 요청이 실패해도 대화 목록을 다시 확인한다.
             await loadConversationList();
         } finally {
             isLoading = false;
             updateInputState();
+            scrollToBottom();
             questionInput.focus();
         }
     }
 
+    // 질문 입력 시 높이를 자동으로 조절한다.
     questionInput.addEventListener("input", () => {
         questionInput.style.height = "auto";
         questionInput.style.height =
@@ -383,6 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateInputState();
     });
 
+    // Enter는 전송, Shift+Enter는 줄바꿈으로 처리한다.
     questionInput.addEventListener("keydown", (event) => {
         if (
             event.key === "Enter" &&
@@ -404,11 +419,12 @@ document.addEventListener("DOMContentLoaded", () => {
         sendQuestion(questionInput.value);
     });
 
+    // 추천 질문 버튼을 누르면 해당 질문을 전송한다.
     suggestionCards.forEach((card) => {
         card.addEventListener("click", () => {
             if (!departmentSelect.value) {
                 composerHint.textContent =
-                    "먼저 왼쪽 메뉴에서 학과를 선택해 주세요.";
+                    "먼저 왼쪽 메뉴에서 안내 분야를 선택해 주세요.";
                 departmentSelect.focus();
                 return;
             }
